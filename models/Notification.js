@@ -1,0 +1,36 @@
+import mongoose from "mongoose";
+const notificationSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    content: { type: String, required: true },
+    read: { type: Boolean, default: false },
+  },
+  { timestamps: true }
+);
+
+export default mongoose.model("Notification", notificationSchema);
+// Compare this snippet from models/Comment.js:
+// import mongoose from "mongoose";
+// const commentSchema = new mongoose.Schema(
+//   {
+//     post: {
+//       type: mongoose.Schema.Types.ObjectId,
+//       ref: "Post",
+//       required: true,
+//     },
+//     user: {
+//       type: mongoose.Schema.Types.ObjectId,
+//       ref: "User",
+//       required: true,
+//     },
+//     content: { type: String, required: true },
+//     createdAt: { type: Date, default: Date.now },
+//     upvotes: { type: Number, default: 0 },
+//     downvotes: { type: Number, default: 0 },
+//   },
+//   { timestamps: true }
+// );

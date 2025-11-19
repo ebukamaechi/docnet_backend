@@ -1,0 +1,319 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Social Media API",
+        "version": "1.0.0",
+        "description": "API documentation for a social media application."
+    },
+    "servers": [
+        {
+            "url": "http://localhost:5000",
+            "description": "Local server"
+        }
+    ],
+    "paths": {
+        "/api/auth/register": {
+            "post": {
+                "summary": "Register a new user",
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserRegister"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully"
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "summary": "Login a user",
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserLogin"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful"
+                    },
+                    "401": {
+                        "description": "Invalid credentials"
+                    }
+                }
+            }
+        },
+        "/api/users/{userId}": {
+            "get": {
+                "summary": "Get user profile",
+                "tags": [
+                    "Users"
+                ],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User profile retrieved"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/api/posts": {
+            "get": {
+                "summary": "Get all posts",
+                "tags": [
+                    "Posts"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of posts"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create a post",
+                "tags": [
+                    "Posts"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Post"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Post created"
+                    }
+                }
+            }
+        },
+        "/api/posts/{postId}/comments": {
+            "post": {
+                "summary": "Add comment to a post",
+                "tags": [
+                    "Comments"
+                ],
+                "parameters": [
+                    {
+                        "name": "postId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Comment"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Comment added"
+                    }
+                }
+            }
+        },
+        "/api/posts/{postId}/like": {
+            "post": {
+                "summary": "Like a post",
+                "tags": [
+                    "Likes"
+                ],
+                "parameters": [
+                    {
+                        "name": "postId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Post liked"
+                    }
+                }
+            }
+        },
+        "/api/posts/{postId}/unlike": {
+            "post": {
+                "summary": "Unlike a post",
+                "tags": [
+                    "Likes"
+                ],
+                "parameters": [
+                    {
+                        "name": "postId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Post unliked"
+                    }
+                }
+            }
+        },
+        "/api/users/{userId}/follow": {
+            "post": {
+                "summary": "Follow a user",
+                "tags": [
+                    "Follows"
+                ],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User followed"
+                    }
+                }
+            }
+        },
+        "/api/users/{userId}/unfollow": {
+            "post": {
+                "summary": "Unfollow a user",
+                "tags": [
+                    "Follows"
+                ],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User unfollowed"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "UserRegister": {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "username",
+                    "email",
+                    "password"
+                ]
+            },
+            "UserLogin": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "email",
+                    "password"
+                ]
+            },
+            "Post": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "content": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "title",
+                    "content"
+                ]
+            },
+            "Comment": {
+                "type": "object",
+                "properties": {
+                    "content": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "content"
+                ]
+            }
+        }
+    }
+}
