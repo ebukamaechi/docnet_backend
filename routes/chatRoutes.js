@@ -5,6 +5,8 @@ const {
   getUserConversations,
   sendMessage,
   markMessageSeen,
+  deleteMessage,
+  deleteConversation,
 } = require("../controllers/chatController");
 const {
   authenticateUser,
@@ -25,10 +27,13 @@ router.get(
   authenticateUser,
   getConversationMessages
 );
-router.post("/messages/:messageId/seen", authenticateUser, markMessageSeen);
-router.post("/conversations", authenticateUser, startConversation);
-router.post("/send", authenticateUser, sendMessage);
+router.delete("/messages/:messageId", authenticateUser, deleteMessage);
+router.delete("/conversations/:conversationId", authenticateUser, deleteConversation);
 
+
+router.post("/messages/:messageId/seen", authenticateUser, markMessageSeen);
+router.post("/conversations/start/:recipientId", authenticateUser, startConversation);
+router.post("/messages/send", authenticateUser, sendMessage);
 
 router.get("/conversations", authenticateUser, getUserConversations);
 

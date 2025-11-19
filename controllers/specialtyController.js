@@ -1,3 +1,4 @@
+const { json } = require("express");
 const Specialty = require("../models/Specialty");
 exports.addSpecialty = async (req, res) => {
   try {
@@ -27,6 +28,34 @@ exports.getSpecialties = async (req, res) => {
     res.status(200).json({ specialties });
   } catch (err) {
     res.status(500).json({ message: "Server error." });
+  }
+};
+
+exports.getSpecialtyById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const specialty = await Specialty.findById(id);
+    if (!specialty)
+      return res.status(404).json({ message: "Specialty not found" });
+    res.status(200).json({ specialty });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: `Server error: ${error.message}` });
+  }
+};
+exports.updateSpecialty = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+    const specialty = await Specialty.findById(id);
+    if (!specialty)
+      return res.status(404).json({ message: "Specialty not found" });
+    specialty.name = name || specialty.name;
+    await specialty.save();
+    res.status(200).json({ message: "Specialty updated", specialty });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: `Server error: ${error.message}` });
   }
 };
 

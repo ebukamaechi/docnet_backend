@@ -33,7 +33,7 @@ const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "BEL Medical Application API",
+      title: "DocNet Medical Application API",
       version: "1.0.0",
       description: "API documentation for a medical application",
     },

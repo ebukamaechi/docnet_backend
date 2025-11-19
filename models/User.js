@@ -119,8 +119,8 @@ const userSchema = new mongoose.Schema(
       public_id: { type: String, default: "" },
     },
 
-    resetPasswordOTP: { type: String },
-    resetPasswordOTPExpires: { type: Date },
+    otp: { type: String },
+    otpExpires: { type: Date },
     isVerified: { type: Boolean, default: false },
 
     isOnline: { type: Boolean, default: false },

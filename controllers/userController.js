@@ -5,7 +5,6 @@ const cloudinary = require("../config/cloudinary");
 // Import the same medicalSpecialties array used in your schema
 const { medicalSpecialties } = require("../models/User");
 
-
 // Update user specialty
 exports.updateSpecialty = async (req, res) => {
   try {
@@ -41,7 +40,6 @@ exports.updateSpecialty = async (req, res) => {
   }
 };
 
-
 //check specialtyController.js
 // exports.getMedicalSpecialties = async (req, res) => {
 //   try {
@@ -63,7 +61,7 @@ exports.uploadProfilePicture = async (req, res) => {
     const user = await User.findById(userId);
 
     if (user.profileImage?.public_id) {
-        //delete old image
+      //delete old image
       await cloudinary.uploader.destroy(user.profileImage.public_id);
     }
 
@@ -99,14 +97,65 @@ exports.uploadProfilePicture = async (req, res) => {
   }
 };
 // update username...making sure it's unique and not used by another user
+exports.updateUsername = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { username } = req.body;
+    if (!username)
+      return res.status(400).json({ message: "Username is required" });
+
+    const existingUser = await User.findOne({ username });
+    if (existingUser && existingUser._id.toString() !== userId)
+      return res.status(400).json({ message: "Username already taken" });
+
+    const user = await User.findById(userId);
+    //generate a unique username as a fallback
+    user.username = username || `user${Date.now().toString().slice(-5)}`;
+    await user.save();
+    return res.status(200).json({
+      message: "Username updated successfully",
+      username: user.username,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: `Server error: ${error.message}` });
+  }
+};
 // updating name
+exports.updateName = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { name } = req.body;
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    user.name = name;
+    await user.save();
+    res.status(200).json({ message: "name updated successfully", name });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: `Server error: ${error.message}` });
+  }
+};
+
 // changing password
 // updating role
+
 // fetching user profile details
+exports.getUserDetails = async (req, res) => {
+  try {
+    const {userId}=req.params;
+    if(!userId) return res.status(400).json({message:"User ID required"});
+    const user = await User.findById(userId).select("-password");
+    if(!user) return res.status(404).json({message:"User not found"});
+    res.json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: `Server error: ${error.message}` });
+  }
+};
 // deleting user account
 // listing all users with a specific specialty
 // updating bio
-// updating avatarUrl
 // updating badges based on user activity
 // updating sociallinks
 // adding followers count

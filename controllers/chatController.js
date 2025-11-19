@@ -4,12 +4,16 @@ const Message = require("../models/Message");
 
 exports.startConversation = async (req, res) => {
   try {
-    const { recipientId } = req.body;
+    // req.body or req.params
+    const { recipientId } = req.params;
     const senderId = req.user.id;
 
+    //if it exists, return the conversation
     let conversation = await Conversation.findOne({
       members: { $all: [senderId, recipientId] },
     });
+
+    //if no conversation exists, start a new one
     if (!conversation) {
       conversation = new Conversation({
         members: [senderId, recipientId],
@@ -130,3 +134,22 @@ exports.deleteMessage = async (req, res) => {
   }
 };
 // delete conversation
+exports.deleteConversation = async (req, res)=>{
+  try {
+    const {conversationId}=req.params;
+    const userId = req.user.id;
+    const conversation = await Conversation.findById(conversationId);
+    if(!conversation) return res.status(404).json({message:"Conversation not found"});
+    if(!conversation.members.includes(userId)) {
+      return res.status(403).json({message:"You are not authorized to delete this conversation"});
+
+    }
+    await Conversation.findByIdAndDelete(conversationId);
+    await Message.deleteMany({conversationId});
+    res.status(200).json({message:"Conversation deleted successfully"});
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({message:`Could not delete conversation: ${error.message}`});
+  }
+};

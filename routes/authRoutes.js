@@ -2,6 +2,7 @@ const express = require("express");
 const {
   signup,
   login,
+  forgotPassword,
   resetPassword,
   verifyOTP,
   currentUser,
@@ -44,9 +45,6 @@ const router = express.Router();
  *               password:
  *                 type: string
  *                 example: "strongpassword123"
- *               role:
- *                 type: string
- *                 example: "user"
  *     responses:
  *       201:
  *         description: User registered successfully
@@ -83,7 +81,31 @@ router.post("/signup", signup);
 
 router.post("/login", login);
 
-router.post("/request-otp", resetPassword);
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password", resetPassword);
+
+/**
+ * @swagger
+ * /api/auth/verify-otp:
+ *   post:
+ *     summary: User OTP Verification
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               otp:
+ *                 type: string
+ *                 example: "123456"
+ *     responses:
+ *       200:
+ *         description: OTP Verified successfully, login now
+ *       401:
+ *         description: Unauthorized / invalid OTP
+ */
 router.post("/verify-otp", verifyOTP);
 
 /**
