@@ -4,9 +4,11 @@ const http = require("http");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsdoc = require("swagger-jsdoc");
 const connectDB = require("./config/db");
+
 const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
 const chatRoutes = require("./routes/chatRoutes");
+const specialtyRoutes = require("./routes/specialtyRoutes");
 // const postRoutes = require("./routes/postRoutes");
 // const commentRoutes = require("./routes/commentRoutes");
 const cors = require("cors");
@@ -55,6 +57,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.use("/api/auth", authRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/specialty", specialtyRoutes);
 // app.use("/api/posts", postRoutes);
 // app.use("/api/comments", commentRoutes);
 

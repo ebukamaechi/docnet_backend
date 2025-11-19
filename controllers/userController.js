@@ -1,10 +1,10 @@
 const User = require("../models/User");
-const mongoose = require("mongoose");
+// const mongoose = require("mongoose");
 const cloudinary = require("../config/cloudinary");
 
 // Import the same medicalSpecialties array used in your schema
 const { medicalSpecialties } = require("../models/User");
-const { gravity } = require("sharp");
+
 
 // Update user specialty
 exports.updateSpecialty = async (req, res) => {
@@ -41,17 +41,19 @@ exports.updateSpecialty = async (req, res) => {
   }
 };
 
-exports.getMedicalSpecialties = async (req, res) => {
-  try {
-    return res.status(200).json({
-      message: "Medical specialties fetched successfully.",
-      specialties: medicalSpecialties,
-    });
-  } catch (error) {
-    console.error("Error fetching specialties:", error);
-    return res.status(500).json({ message: "Server error." });
-  }
-};
+
+//check specialtyController.js
+// exports.getMedicalSpecialties = async (req, res) => {
+//   try {
+//     return res.status(200).json({
+//       message: "Medical specialties fetched successfully.",
+//       specialties: medicalSpecialties,
+//     });
+//   } catch (error) {
+//     console.error("Error fetching specialties:", error);
+//     return res.status(500).json({ message: "Server error." });
+//   }
+// };
 
 // upload profile picture
 exports.uploadProfilePicture = async (req, res) => {
@@ -60,7 +62,7 @@ exports.uploadProfilePicture = async (req, res) => {
     if (!req.file) return res.status(400).json({ message: "No file uploaded" });
     const user = await User.findById(userId);
 
-    if (user.profileImage.public_id) {
+    if (user.profileImage?.public_id) {
         //delete old image
       await cloudinary.uploader.destroy(user.profileImage.public_id);
     }
