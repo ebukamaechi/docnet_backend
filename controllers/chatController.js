@@ -67,6 +67,7 @@ exports.sendMessage = async (req, res) => {
     const { conversationId, text, messageType } = req.body;
     const senderId = req.user.id;
     const mediaUrl = req.body.mediaUrl || null;
+    
 
     const newMessage = new Message({
       conversationId,

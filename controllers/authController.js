@@ -60,7 +60,13 @@ exports.login = async (req, res) => {
       return res
         .status(401)
         .json({ message: "Please verify your account first" });
-    const isMatch = await bcrypt.compare(password, user.password);
+    if (user.isDisabled===true)
+      return res
+        .status(401)
+        .json({
+          message: "This account has been disabled. Please contact support.",
+        });
+        const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
@@ -178,7 +184,7 @@ exports.currentUser = async (req, res) => {
     const userId = req.user.id;
     const user = await User.findById(userId).select("-password");
     if (!user) return res.status(404).json({ message: "User not found" });
-    // if(!user.isVerified) return res.status(401).json({message:"Please verify your account first"});
+    if(user.isDisabled===true) return res.status(401).json({message:"This account has been disabled. Please contact support."});
     res.status(200).json({ user });
   } catch (error) {
     console.error(error);

@@ -122,6 +122,7 @@ const userSchema = new mongoose.Schema(
     otp: { type: String },
     otpExpires: { type: Date },
     isVerified: { type: Boolean, default: false },
+    isDisabled: { type: Boolean, default: false },
 
     isOnline: { type: Boolean, default: false },
     lastSeen: { type: Date },
@@ -138,6 +139,7 @@ const userSchema = new mongoose.Schema(
     socialLinks: {
       twitter: { type: String },
       facebook: { type: String },
+      instagram: { type: String },
     },
 
     followers: { type: Number, default: 0 },
