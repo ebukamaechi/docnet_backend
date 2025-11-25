@@ -14,7 +14,7 @@ exports.signup = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, 12);
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     // user.otp = otp;
-    const otpExpires = Date.now() + 5 * 60 * 1000; //5 mins
+    const otpExpires = Date.now() + 15 * 60 * 1000; //15 mins
 
     // const 
     const newUser = new User({
