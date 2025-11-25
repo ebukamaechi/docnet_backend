@@ -8,6 +8,8 @@ const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
 const chatRoutes = require("./routes/chatRoutes");
+// const feedRoutes = require("./routes/feedRoutes");
+const postRoutes = require("./routes/postRoutes");
 const specialtyRoutes = require("./routes/specialtyRoutes");
 // const postRoutes = require("./routes/postRoutes");
 // const commentRoutes = require("./routes/commentRoutes");
@@ -21,12 +23,31 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+  "http://localhost:5000", 
+  "https://docnet.com.ng", 
+];
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: function (origin, callback) {
+      // Allow requests like mobile apps or tools without an origin
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
+
 
 // Swagger config
 const options = {
@@ -56,6 +77,8 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/chat", chatRoutes);
+app.use("/api/posts", postRoutes);
+// app.use("/api/feed", feedRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/specialty", specialtyRoutes);
 // app.use("/api/posts", postRoutes);
@@ -64,7 +87,6 @@ app.use("/api/specialty", specialtyRoutes);
 app.get("/", (req, res) => {
   res.send("BEL Medical API is running...");
 });
-
 
 connectDB().then(() => {
   app.listen(PORT, () =>
