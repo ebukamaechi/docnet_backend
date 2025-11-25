@@ -55,27 +55,49 @@ app.use(cookieParser());
 // );
 
 // List of allowed Flutter Web origins
-const allowedOrigins = [
-  "http://localhost:5000",
-  "http://localhost:61115", // Flutter Web dev server
-  "https://your-flutter-web-domain.com", // Flutter Web production
-];
+// const allowedOrigins = [
+//   "http://localhost:5000",
+//   "http://localhost:61115", // Flutter Web dev server
+//   "https://your-flutter-web-domain.com", // Flutter Web production
+// ];
+
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       // Allow requests with no origin (Flutter mobile, Postman)
+//       if (!origin) return callback(null, true);
+
+//       // Allow requests from your Flutter Web domains
+//       if (allowedOrigins.includes(origin)) return callback(null, true);
+
+//       // Reject any other browser/web requests
+//       return callback(new Error("Not allowed by CORS"));
+//     },
+//     methods: "GET, POST, PUT, DELETE, PATCH",
+//     allowedHeaders: "Content-Type, Authorization",
+//     credentials: true, // needed for cookies
+//   })
+// );
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin (Flutter mobile, Postman)
+      // Allow mobile (no origin)
       if (!origin) return callback(null, true);
 
-      // Allow requests from your Flutter Web domains
-      if (allowedOrigins.includes(origin)) return callback(null, true);
+      // Allow all localhost ports (Flutter Web dev)
+      if (origin.startsWith("http://localhost:")) return callback(null, true);
 
-      // Reject any other browser/web requests
+      // Allow production Flutter Web
+      if (origin === "https://your-flutter-web-domain.com")
+        return callback(null, true);
+
+      // Reject all others
       return callback(new Error("Not allowed by CORS"));
     },
     methods: "GET, POST, PUT, DELETE, PATCH",
     allowedHeaders: "Content-Type, Authorization",
-    credentials: true, // needed for cookies
+    credentials: true,
   })
 );
 
