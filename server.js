@@ -32,16 +32,50 @@ app.use(cookieParser());
 //   "https://docnet.com.ng",
 // ];
 
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       // Flutter mobile (and Postman, tools) have no Origin
+//       if (!origin) return callback(null, true);
+
+//       // Reject any request that actually has an origin (browser/web)
+//       return callback(new Error("Not allowed by CORS"));
+//     },
+//     credentials: true, // needed if using cookies
+//   })
+// );
+
+// app.use(
+//   cors({
+//     origin:"*",
+//     methods:"GET, POST, PUT, DELETE, PATCH",
+//     allowedHeaders:"Content-Type, Authorization",
+//     credentials: true, // needed if using cookies
+//   })
+// );
+
+// List of allowed Flutter Web origins
+const allowedOrigins = [
+  "http://localhost:5000",
+  "http://localhost:61115", // Flutter Web dev server
+  "https://your-flutter-web-domain.com", // Flutter Web production
+];
+
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Flutter mobile (and Postman, tools) have no Origin
+      // Allow requests with no origin (Flutter mobile, Postman)
       if (!origin) return callback(null, true);
 
-      // Reject any request that actually has an origin (browser/web)
+      // Allow requests from your Flutter Web domains
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+
+      // Reject any other browser/web requests
       return callback(new Error("Not allowed by CORS"));
     },
-    credentials: true, // needed if using cookies
+    methods: "GET, POST, PUT, DELETE, PATCH",
+    allowedHeaders: "Content-Type, Authorization",
+    credentials: true, // needed for cookies
   })
 );
 
@@ -57,7 +91,7 @@ const options = {
     servers: [
       {
         url:
-          `https://docnet-backend-b6a4.onrender.com:${PORT}` ||
+          `https://docnet-backend-b6a4.onrender.com` ||
           `http://localhost:${PORT}`,
         description: "Local server",
       },
