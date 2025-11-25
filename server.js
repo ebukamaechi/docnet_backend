@@ -28,8 +28,8 @@ app.use(cookieParser());
 //   process.env.FRONTEND_URL,
 //   "http://localhost:3000",
 //   "http://127.0.0.1:3000",
-//   "http://localhost:5000", 
-//   "https://docnet.com.ng", 
+//   "http://localhost:5000",
+//   "https://docnet.com.ng",
 // ];
 
 app.use(
@@ -45,7 +45,6 @@ app.use(
   })
 );
 
-
 // Swagger config
 const options = {
   definition: {
@@ -55,7 +54,14 @@ const options = {
       version: "1.0.0",
       description: "API documentation for a medical application",
     },
-    servers: [{ url: `http://localhost:${PORT}`, description: "Local server" }],
+    servers: [
+      {
+        url:
+          `https://docnet-backend-b6a4.onrender.com/:${PORT}` ||
+          `http://localhost:${PORT}`,
+        description: "Local server",
+      },
+    ],
     components: {
       securitySchemes: {
         bearerAuth: {
@@ -87,6 +93,9 @@ app.get("/", (req, res) => {
 
 connectDB().then(() => {
   app.listen(PORT, () =>
-    console.log(`🚀 SERVER RUNNING ON http://localhost:${PORT}`)
+    console.log(
+      `🚀 SERVER RUNNING ON http://localhost:${PORT}` ||
+        `https://docnet-backend-b6a4.onrender.com/:${PORT}`
+    )
   );
 });
