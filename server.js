@@ -57,7 +57,7 @@ const options = {
     servers: [
       {
         url:
-          `https://docnet-backend-b6a4.onrender.com/:${PORT}` ||
+          `https://docnet-backend-b6a4.onrender.com:${PORT}` ||
           `http://localhost:${PORT}`,
         description: "Local server",
       },
